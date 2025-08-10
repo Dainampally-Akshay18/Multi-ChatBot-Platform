@@ -7,9 +7,9 @@ from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
-from app.api.routes import chatbots
-from app.config import settings
-from app.utils.helpers import validate_environment, get_environment_info
+from api.routes import chatbots
+from config import settings
+from utils.helpers import validate_environment, get_environment_info
 import logging
 import time
 from datetime import datetime

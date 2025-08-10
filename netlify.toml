@@ -1,28 +1,22 @@
-# Multi-Chatbot Platform - Complete Netlify Configuration
-# File: netlify.toml (place in project root)
-
+# Multi-Chatbot Platform - Fixed Netlify Configuration
 [build]
-  # Build your React frontend
-  command = "cd frontend && npm ci && npm run build"
+  # Fixed build command 
+  command = "cd frontend && npm install && npm run build"
   
   # Publish the built frontend
   publish = "frontend/dist"
   
-  # Functions directory at root level (where you copied them)
+  # Functions directory at root level
   functions = "netlify/functions"
 
 [build.environment]
-  # Python version for your functions
   PYTHON_VERSION = "3.9"
-  
-  # Node version for frontend build
   NODE_VERSION = "20"
 
-# Alternative way to specify functions directory
 [functions]
   directory = "netlify/functions"
 
-# CRITICAL: API redirects for your 8 chatbots
+# Your API redirects (these are working correctly)
 [[redirects]]
   from = "/api/chatbots/*"
   to = "/.netlify/functions/api/:splat"
@@ -35,13 +29,12 @@
   status = 200
   force = true
 
-# Frontend SPA redirects (React Router)
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-# CORS headers for your API functions
+# CORS headers (working correctly)
 [[headers]]
   for = "/.netlify/functions/*"
   [headers.values]
@@ -49,10 +42,5 @@
     Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
     Access-Control-Allow-Headers = "Content-Type, Authorization, X-Requested-With"
 
-# Environment context for production
 [context.production.environment]
   NODE_ENV = "production"
-  
-# Development context
-[context.development.environment]
-  NODE_ENV = "development"

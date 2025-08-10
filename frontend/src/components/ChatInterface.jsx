@@ -288,7 +288,7 @@ const ChatInterface = () => {
     }
   };
 
-  // Updated handleSendMessage with new API service
+  // UPDATED: Handle all 8 chatbots with correct API service methods
   const handleSendMessage = async () => {
     if (!inputMessage.trim() || isLoading) return;
 
@@ -317,20 +317,32 @@ const ChatInterface = () => {
 
       let response;
       
-      // Map botId to API service methods
+      // UPDATED: Map all 8 chatbot IDs to their corresponding API service methods
       switch (selectedBot.id) {
         case 'medical':
-        case 'mental_health': // Mental health can use medical endpoint
           response = await apiService.sendMedicalMessage(currentMessage);
+          break;
+        case 'mental_health':
+          response = await apiService.sendMentalHealthMessage(currentMessage);
           break;
         case 'education':
           response = await apiService.sendEducationMessage(currentMessage);
           break;
         case 'finance':
+          response = await apiService.sendFinanceMessage(currentMessage);
+          break;
         case 'legal':
+          response = await apiService.sendLegalMessage(currentMessage);
+          break;
         case 'career':
+          response = await apiService.sendCareerMessage(currentMessage);
+          break;
         case 'developer':
+          response = await apiService.sendDeveloperMessage(currentMessage);
+          break;
         case 'entertainment':
+          response = await apiService.sendEntertainmentMessage(currentMessage);
+          break;
         default:
           response = await apiService.sendGeneralMessage(currentMessage);
           break;
@@ -393,12 +405,12 @@ const ChatInterface = () => {
         .replace(/`(.*?)`/g, '$1')        // Remove inline code
         .replace(/``````/g, (match) => {
           // Keep code blocks but remove markdown markers
-          return match.replace(/``````/g, '');
+          return match.replace(/```/g, '').replace(/`/g, '');
         })
         .replace(/#{1,6}\s/g, '')         // Remove headers
         .replace(/>\s/g, '')              // Remove blockquotes
-        .replace(/[-*+]\s/g, '• ')        // Convert list markers to bullets
-        .replace(/\d+\.\s/g, '• ');       // Convert numbered lists to bullets
+        .replace(/[-*+]\s/g, '-  ')        // Convert list markers to bullets
+        .replace(/\d+\.\s/g, '-  ');       // Convert numbered lists to bullets
       
       await navigator.clipboard.writeText(plainText);
       console.log('Message copied to clipboard');

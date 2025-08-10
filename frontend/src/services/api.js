@@ -1,6 +1,6 @@
 // frontend/src/services/api.js
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://cdak-chatbot.netlify.app' // Use root-relative URLs in production (Netlify handles routing)
+  ? 'https://cdak-chatbot.netlify.app/' // Use root-relative URLs in production (Netlify handles routing)
   : 'http://localhost:8000'; // Local development backend
 
 class ApiService {

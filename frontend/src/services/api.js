@@ -1,44 +1,50 @@
-// frontend/src/services/api.js - CORRECTED FOR ALL 8 CHATBOTS
+// Complete API Service for Multi-Chatbot Platform
+// File: frontend/src/services/api.js
 
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://langchain-rag-chatbot.onrender.com' // Use relative URLs in production (Netlify handles routing)
-  : ''; // Use relative URLs in development too (Vite proxy handles routing)
+  ? 'https://langchain-rag-chatbot.onrender.com' // Your Render backend URL
+  : 'http://localhost:8000'; // Local development backend
 
 class ApiService {
   async request(endpoint, options = {}) {
-    // Ensure endpoint starts with /
-    const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+    const url = `${API_BASE_URL}${endpoint}`;
     
-    // Use relative URLs - let Vite proxy handle routing in dev
-    const url = normalizedEndpoint;
+    console.log('🚀 Making request to:', endpoint);
+    console.log('🔍 Environment:', process.env.NODE_ENV);
+    console.log('🔍 Full URL will be:', url);
     
-    const config = {
+    const defaultOptions = {
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        ...options.headers,
+        'Accept': 'application/json',
       },
-      ...options,
     };
 
+    const finalOptions = { ...defaultOptions, ...options };
+
     try {
-      console.log('🚀 Making request to:', url);
-      console.log('🔍 Environment:', process.env.NODE_ENV);
-      console.log('🔍 Full URL will be:', window.location.origin + url);
-      
-      const response = await fetch(url, config);
+      const response = await fetch(url, finalOptions);
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       
-      return await response.json();
+      const data = await response.json();
+      console.log('✅ API response received:', data);
+      return data;
     } catch (error) {
       console.error('❌ API request failed:', error);
       throw error;
     }
   }
 
-  // CORRECTED: All 8 chatbot endpoints using /api/chatbots/*
+  // Health check endpoint
+  async healthCheck() {
+    return this.request('/');
+  }
+
+  // Medical Chatbot
   async sendMedicalMessage(message) {
     return this.request('/api/chatbots/medical', {
       method: 'POST',
@@ -46,6 +52,7 @@ class ApiService {
     });
   }
 
+  // Mental Health Chatbot
   async sendMentalHealthMessage(message) {
     return this.request('/api/chatbots/mental-health', {
       method: 'POST',
@@ -53,13 +60,15 @@ class ApiService {
     });
   }
 
+  // Education Chatbot
   async sendEducationMessage(message) {
     return this.request('/api/chatbots/education', {
-      method: 'POST', 
+      method: 'POST',
       body: JSON.stringify({ message }),
     });
   }
 
+  // Finance Chatbot
   async sendFinanceMessage(message) {
     return this.request('/api/chatbots/finance', {
       method: 'POST',
@@ -67,6 +76,7 @@ class ApiService {
     });
   }
 
+  // Legal Chatbot
   async sendLegalMessage(message) {
     return this.request('/api/chatbots/legal', {
       method: 'POST',
@@ -74,6 +84,7 @@ class ApiService {
     });
   }
 
+  // Career Chatbot
   async sendCareerMessage(message) {
     return this.request('/api/chatbots/career', {
       method: 'POST',
@@ -81,6 +92,7 @@ class ApiService {
     });
   }
 
+  // Developer Chatbot
   async sendDeveloperMessage(message) {
     return this.request('/api/chatbots/developer', {
       method: 'POST',
@@ -88,6 +100,7 @@ class ApiService {
     });
   }
 
+  // Entertainment Chatbot
   async sendEntertainmentMessage(message) {
     return this.request('/api/chatbots/entertainment', {
       method: 'POST',
@@ -95,6 +108,7 @@ class ApiService {
     });
   }
 
+  // General Chatbot (fallback)
   async sendGeneralMessage(message) {
     return this.request('/api/chatbots/general', {
       method: 'POST',
@@ -102,9 +116,28 @@ class ApiService {
     });
   }
 
-  async healthCheck() {
-    return this.request('/api/chatbots');
+  // Generic method for any chatbot type
+  async sendMessage(chatbotType, message) {
+    const methodMap = {
+      'medical': this.sendMedicalMessage,
+      'mental-health': this.sendMentalHealthMessage,
+      'education': this.sendEducationMessage,
+      'finance': this.sendFinanceMessage,
+      'legal': this.sendLegalMessage,
+      'career': this.sendCareerMessage,
+      'developer': this.sendDeveloperMessage,
+      'entertainment': this.sendEntertainmentMessage,
+      'general': this.sendGeneralMessage,
+    };
+
+    const method = methodMap[chatbotType];
+    if (method) {
+      return method.call(this, message);
+    } else {
+      throw new Error(`Unsupported chatbot type: ${chatbotType}`);
+    }
   }
 }
 
+// Export singleton instance
 export default new ApiService();

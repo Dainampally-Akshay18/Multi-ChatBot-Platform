@@ -2,8 +2,8 @@
 Enhanced chatbot handlers with improved chain management
 """
 
-from app.core.chains import create_enhanced_chatbot_chain, get_enhanced_chatbot_chain, EnhancedChatbotChain
-from app.chatbots.prompt_templates import PromptTemplates
+from core.chains import create_enhanced_chatbot_chain, get_enhanced_chatbot_chain, EnhancedChatbotChain
+from chatbots.prompt_templates import PromptTemplates
 from typing import Dict, Any, List, Optional
 import logging
 import asyncio

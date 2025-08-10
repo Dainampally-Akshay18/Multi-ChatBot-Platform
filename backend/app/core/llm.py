@@ -1,5 +1,5 @@
 from langchain_groq import ChatGroq
-from app.config import settings
+from config import settings
 import logging
 
 logger = logging.getLogger(__name__)

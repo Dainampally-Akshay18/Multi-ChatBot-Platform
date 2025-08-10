@@ -4,7 +4,7 @@ FastAPI routes for all chatbot endpoints
 
 from fastapi import APIRouter, HTTPException, status, Depends
 from fastapi.responses import JSONResponse
-from app.api.models.schemas import (
+from api.models.schemas import (
     ChatRequest, 
     ChatResponse, 
     BatchChatRequest, 
@@ -13,7 +13,7 @@ from app.api.models.schemas import (
     MetricsResponse,
     ErrorResponse
 )
-from app.chatbots import (
+from chatbots import (
     get_chatbot_response,
     get_chatbot_response_async,
     get_batch_chatbot_responses,

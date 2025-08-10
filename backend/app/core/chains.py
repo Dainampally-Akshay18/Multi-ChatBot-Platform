@@ -2,7 +2,7 @@ from langchain.schema import HumanMessage, SystemMessage, BaseMessage
 from langchain.schema.runnable import RunnablePassthrough, RunnableLambda
 from langchain.schema.output_parser import StrOutputParser
 from langchain_core.callbacks import AsyncCallbackHandler  # ✅ Updated import
-from app.core.llm import get_llm
+from core.llm import get_llm
 from typing import Dict, Any, List, Optional, Callable
 import logging
 import time

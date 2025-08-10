@@ -1,7 +1,7 @@
 // frontend/src/services/api.js - CORRECTED FOR ALL 8 CHATBOTS
 
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? '' // Use relative URLs in production (Netlify handles routing)
+  ? 'https://langchain-rag-chatbot.onrender.com' // Use relative URLs in production (Netlify handles routing)
   : ''; // Use relative URLs in development too (Vite proxy handles routing)
 
 class ApiService {

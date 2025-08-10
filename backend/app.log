@@ -7814,3 +7814,4 @@
 2025-08-10 15:26:14,345 - app.main - INFO - Debug mode: True
 2025-08-10 15:26:14,346 - app.main - INFO - GROQ model: llama3-8b-8192
 2025-08-10 15:26:14,346 - app.main - INFO - Application startup complete
+2025-08-10 16:12:07,014 - app.main - INFO - Shutting down Multi-Chatbot Platform

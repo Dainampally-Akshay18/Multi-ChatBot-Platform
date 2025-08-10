@@ -1,14 +1,243 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Send, ArrowLeft, Loader, AlertCircle, RefreshCw, Wifi, WifiOff } from 'lucide-react';
-import { CHATBOTS, UI_CONFIG } from '../utils/constants';
-import { apiService } from '../services/api';
-import { useConnectionStatus } from '../hooks/useConnectionStatus';
+import { useParams, useNavigate } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeHighlight from 'rehype-highlight';
+import { 
+  Send, ArrowLeft, Loader, AlertCircle, RefreshCw, 
+  Copy, ThumbsUp, ThumbsDown, MoreVertical, X
+} from 'lucide-react';
+import api from '../services/api';
+import { API_CONFIG } from '../utils/constants';
+
+// Add this CSS import for syntax highlighting
+import 'highlight.js/styles/github.css';
+
+// Enhanced chatbots data
+const CHATBOTS = [
+  {
+    id: 'medical',
+    name: 'Dr. MediBot',
+    description: 'Professional medical AI assistant',
+    category: 'Healthcare',
+    color: '#10b981',
+    icon: '🏥',
+    status: 'online',
+    lastSeen: 'Active now'
+  },
+  {
+    id: 'mental_health',
+    name: 'Wellness Guide',
+    description: 'Mental health support specialist',
+    category: 'Healthcare',
+    color: '#8b5cf6',
+    icon: '🧠',
+    status: 'online',
+    lastSeen: 'Active now'
+  },
+  {
+    id: 'education',
+    name: 'EduTutor Pro',
+    description: 'Personal learning assistant',
+    category: 'Education',
+    color: '#3b82f6',
+    icon: '📚',
+    status: 'online',
+    lastSeen: 'Active now'
+  },
+  {
+    id: 'finance',
+    name: 'FinanceBot',
+    description: 'Financial advisor assistant',
+    category: 'Finance',
+    color: '#f59e0b',
+    icon: '💰',
+    status: 'online',
+    lastSeen: 'Active now'
+  },
+  {
+    id: 'legal',
+    name: 'LegalEagle',
+    description: 'Legal information specialist',
+    category: 'Legal',
+    color: '#ef4444',
+    icon: '⚖️',
+    status: 'online',
+    lastSeen: 'Active now'
+  },
+  {
+    id: 'career',
+    name: 'CareerCoach',
+    description: 'Professional development guide',
+    category: 'Professional',
+    color: '#06b6d4',
+    icon: '💼',
+    status: 'online',
+    lastSeen: 'Active now'
+  },
+  {
+    id: 'developer',
+    name: 'CodeMaster',
+    description: 'Programming assistant',
+    category: 'Technology',
+    color: '#84cc16',
+    icon: '💻',
+    status: 'online',
+    lastSeen: 'Active now'
+  },
+  {
+    id: 'entertainment',
+    name: 'EntertainBot',
+    description: 'Entertainment guide',
+    category: 'Lifestyle',
+    color: '#ec4899',
+    icon: '🎮',
+    status: 'online',
+    lastSeen: 'Active now'
+  }
+];
+
+const UI_CONFIG = {
+  MAX_MESSAGE_LENGTH: 4000
+};
+
+// Custom Markdown Components for Chat Styling
+const MarkdownComponents = {
+  // Headings
+  h1: ({ children }) => (
+    <h1 className="text-lg font-bold text-gray-900 mb-2 mt-3 first:mt-0">{children}</h1>
+  ),
+  h2: ({ children }) => (
+    <h2 className="text-base font-bold text-gray-900 mb-2 mt-3 first:mt-0">{children}</h2>
+  ),
+  h3: ({ children }) => (
+    <h3 className="text-sm font-semibold text-gray-900 mb-1 mt-2 first:mt-0">{children}</h3>
+  ),
+  
+  // Paragraphs
+  p: ({ children }) => (
+    <p className="mb-2 last:mb-0 leading-relaxed">{children}</p>
+  ),
+  
+  // Lists
+  ul: ({ children }) => (
+    <ul className="list-disc list-inside space-y-1 mb-2 pl-2">{children}</ul>
+  ),
+  ol: ({ children }) => (
+    <ol className="list-decimal list-inside space-y-1 mb-2 pl-2">{children}</ol>
+  ),
+  li: ({ children }) => (
+    <li className="text-sm leading-relaxed">{children}</li>
+  ),
+  
+  // Code blocks
+  code: ({ inline, className, children, ...props }) => {
+    if (inline) {
+      return (
+        <code 
+          className="bg-gray-100 text-gray-800 px-1.5 py-0.5 rounded text-xs font-mono"
+          {...props}
+        >
+          {children}
+        </code>
+      );
+    }
+    return (
+      <code 
+        className={`block bg-gray-900 text-gray-100 p-3 rounded-lg text-xs font-mono overflow-x-auto mb-2 ${className || ''}`}
+        {...props}
+      >
+        {children}
+      </code>
+    );
+  },
+  
+  // Pre blocks (code blocks container)
+  pre: ({ children }) => (
+    <pre className="bg-gray-900 text-gray-100 p-3 rounded-lg text-xs font-mono overflow-x-auto mb-2 whitespace-pre-wrap">
+      {children}
+    </pre>
+  ),
+  
+  // Blockquotes
+  blockquote: ({ children }) => (
+    <blockquote className="border-l-4 border-blue-400 pl-3 py-1 bg-blue-50 text-gray-700 italic mb-2 rounded-r">
+      {children}
+    </blockquote>
+  ),
+  
+  // Links
+  a: ({ children, href }) => (
+    <a 
+      href={href} 
+      className="text-blue-600 hover:text-blue-800 underline"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {children}
+    </a>
+  ),
+  
+  // Tables
+  table: ({ children }) => (
+    <div className="overflow-x-auto mb-2">
+      <table className="min-w-full border border-gray-200 rounded text-xs">
+        {children}
+      </table>
+    </div>
+  ),
+  thead: ({ children }) => (
+    <thead className="bg-gray-50">{children}</thead>
+  ),
+  th: ({ children }) => (
+    <th className="border border-gray-200 px-2 py-1 text-left font-semibold text-gray-700">
+      {children}
+    </th>
+  ),
+  td: ({ children }) => (
+    <td className="border border-gray-200 px-2 py-1">{children}</td>
+  ),
+  
+  // Horizontal rule
+  hr: () => (
+    <hr className="my-3 border-gray-300" />
+  ),
+  
+  // Strong and emphasis
+  strong: ({ children }) => (
+    <strong className="font-bold text-gray-900">{children}</strong>
+  ),
+  em: ({ children }) => (
+    <em className="italic">{children}</em>
+  ),
+};
+
+// Connection status hook
+const useConnectionStatus = () => {
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [serverStatus, setServerStatus] = useState('online');
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  return { isOnline, serverStatus };
+};
 
 const ChatInterface = () => {
   const { botId } = useParams();
   const navigate = useNavigate();
   const messagesEndRef = useRef(null);
+  const inputRef = useRef(null);
   const { isOnline, serverStatus } = useConnectionStatus();
   
   const [messages, setMessages] = useState([]);
@@ -16,7 +245,6 @@ const ChatInterface = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [error, setError] = useState(null);
-  const [retryCount, setRetryCount] = useState(0);
 
   // Find the selected chatbot
   const selectedBot = CHATBOTS.find(bot => bot.id === botId);
@@ -32,7 +260,7 @@ const ChatInterface = () => {
       {
         id: 1,
         type: 'bot',
-        content: `Hello! I'm your ${selectedBot.name}. ${selectedBot.description} How can I help you today?`,
+        content: `Hello! I'm **${selectedBot.name}**, your ${selectedBot.description}. I'm here to help you with anything you need.\n\nWhat can I assist you with today? 😊`,
         timestamp: new Date().toISOString(),
         botName: selectedBot.name
       }
@@ -47,18 +275,25 @@ const ChatInterface = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const simulateTyping = async (duration = 1000) => {
+  const simulateTyping = async (duration = 1500) => {
     setIsTyping(true);
     await new Promise(resolve => setTimeout(resolve, duration));
     setIsTyping(false);
   };
 
-  const handleSendMessage = async (retryAttempt = false) => {
+  // handleKeyPress function
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
+  const handleSendMessage = async () => {
     if (!inputMessage.trim() || isLoading) return;
 
-    // Check connection status
     if (!isOnline || serverStatus !== 'online') {
-      setError('You appear to be offline. Please check your connection and try again.');
+      setError('Connection lost. Please check your internet connection and try again.');
       return;
     }
 
@@ -66,8 +301,7 @@ const ChatInterface = () => {
       id: Date.now(),
       type: 'user',
       content: inputMessage.trim(),
-      timestamp: new Date().toISOString(),
-      retryAttempt
+      timestamp: new Date().toISOString()
     };
 
     setMessages(prev => [...prev, userMessage]);
@@ -75,60 +309,37 @@ const ChatInterface = () => {
     setIsLoading(true);
     setError(null);
 
+    setTimeout(() => inputRef.current?.focus(), 100);
+
     try {
-      // Simulate typing for better UX
-      await simulateTyping(500);
+      await simulateTyping(1200);
 
-      const response = await apiService.sendMessage(
-        botId, 
-        userMessage.content,
-        null,
-        { 
-          typingDelay: 200,
-          useCache: false // Disable cache for real-time conversations
-        }
-      );
+      // Use the real API service
+      console.log('Sending to:', API_CONFIG.ENDPOINTS[selectedBot.id]);
+      const response = await api.post(API_CONFIG.ENDPOINTS[selectedBot.id.toUpperCase()], {
+        message: userMessage.content
+      });
 
-      if (response.success) {
+      if (response.data) {
         const botMessage = {
           id: Date.now() + 1,
           type: 'bot',
           content: response.data.response,
-          timestamp: response.data.timestamp,
+          timestamp: new Date().toISOString(),
           botName: selectedBot.name,
-          duration: response.data.duration,
-          fromCache: response.fromCache
+          duration: response.data.duration || 0
         };
 
         setMessages(prev => [...prev, botMessage]);
-        setRetryCount(0); // Reset retry count on success
       } else {
-        setError(response.error);
-        
-        // Show retry option for certain error types
-        if (['timeout', 'network', 'server'].includes(response.errorType)) {
-          setRetryCount(prev => prev + 1);
-        }
+        setError('Failed to get response. Please try again.');
       }
     } catch (err) {
-      setError('An unexpected error occurred. Please try again.');
-      setRetryCount(prev => prev + 1);
+      console.error('API Error:', err);
+      setError('Something went wrong. Please try again.');
     } finally {
       setIsLoading(false);
       setIsTyping(false);
-    }
-  };
-
-  const handleRetry = () => {
-    if (retryCount > 0) {
-      handleSendMessage(true);
-    }
-  };
-
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
     }
   };
 
@@ -137,132 +348,225 @@ const ChatInterface = () => {
       {
         id: 1,
         type: 'bot',
-        content: `Hello! I'm your ${selectedBot.name}. ${selectedBot.description} How can I help you today?`,
+        content: `Hello again! I'm **${selectedBot.name}**. How can I help you today? 😊`,
         timestamp: new Date().toISOString(),
         botName: selectedBot.name
       }
     ]);
     setError(null);
-    setRetryCount(0);
+  };
+
+  // Enhanced copyMessage function with Markdown handling
+  const copyMessage = async (content) => {
+    try {
+      // Remove markdown formatting for plain text copy
+      const plainText = content
+        .replace(/\*\*(.*?)\*\*/g, '$1')  // Remove bold
+        .replace(/\*(.*?)\*/g, '$1')      // Remove italic
+        .replace(/`(.*?)`/g, '$1')        // Remove inline code
+        .replace(/``````/g, (match) => {
+          // Keep code blocks but remove markdown markers
+          return match.replace(/``````/g, '');
+        })
+        .replace(/#{1,6}\s/g, '')         // Remove headers
+        .replace(/>\s/g, '')              // Remove blockquotes
+        .replace(/[-*+]\s/g, '• ')        // Convert list markers to bullets
+        .replace(/\d+\.\s/g, '• ');       // Convert numbered lists to bullets
+      
+      await navigator.clipboard.writeText(plainText);
+      console.log('Message copied to clipboard');
+    } catch (err) {
+      console.error('Failed to copy message:', err);
+    }
+  };
+
+  const formatTime = (timestamp) => {
+    return new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
   if (!selectedBot) {
     return (
-      <div className="text-center py-12">
-        <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-        <h2 className="text-xl font-semibold text-gray-900 mb-2">Chatbot Not Found</h2>
-        <p className="text-gray-600 mb-4">The requested chatbot doesn't exist.</p>
-        <Link
-          to="/"
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
-        >
-          Back to Home
-        </Link>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-pink-50 p-4">
+        <div className="text-center bg-white rounded-3xl p-8 shadow-2xl border border-red-200 max-w-sm w-full">
+          <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+          <h2 className="text-xl font-bold text-gray-900 mb-3">Assistant Not Found</h2>
+          <p className="text-gray-600 mb-6">The requested AI assistant doesn't exist.</p>
+          <button
+            onClick={() => navigate('/')}
+            className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+          >
+            Return Home
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
-      {/* Chat Header with Connection Status */}
-      <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
+    <div className="h-screen w-screen flex flex-col bg-gray-50 relative overflow-hidden">
+      {/* Mobile-Optimized Header */}
+      <div className="bg-white border-b border-gray-200 px-4 py-3 shadow-sm flex-shrink-0">
+        <div className="flex items-center justify-between w-full">
+          <div className="flex items-center space-x-3 flex-1 min-w-0">
             <button
               onClick={() => navigate('/')}
-              className="p-1 hover:bg-white/20 rounded-lg transition-colors"
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0"
             >
-              <ArrowLeft size={20} />
+              <ArrowLeft size={20} className="text-gray-600" />
             </button>
-            <div 
-              className="w-10 h-10 rounded-lg flex items-center justify-center text-xl"
-              style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}
-            >
-              {selectedBot.icon}
-            </div>
-            <div>
-              <h2 className="font-semibold text-lg">{selectedBot.name}</h2>
-              <div className="flex items-center space-x-2 text-blue-100 text-sm">
-                <span>{selectedBot.category}</span>
-                {/* Connection indicator */}
-                <div className="flex items-center space-x-1">
-                  {isOnline && serverStatus === 'online' ? (
-                    <Wifi size={14} className="text-green-300" />
-                  ) : (
-                    <WifiOff size={14} className="text-red-300" />
-                  )}
-                  <span className="text-xs">
-                    {serverStatus === 'online' ? 'Connected' : 'Offline'}
-                  </span>
+            
+            <div className="flex items-center space-x-3 min-w-0">
+              <div className="relative flex-shrink-0">
+                <div 
+                  className="w-10 h-10 rounded-2xl flex items-center justify-center text-lg shadow-md"
+                  style={{ 
+                    background: `linear-gradient(135deg, ${selectedBot.color}20, ${selectedBot.color}40)`,
+                    border: `2px solid ${selectedBot.color}30`
+                  }}
+                >
+                  {selectedBot.icon}
+                </div>
+                <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-white"></div>
+              </div>
+              
+              <div className="min-w-0">
+                <h2 className="text-base font-semibold text-gray-900 truncate">
+                  {selectedBot.name}
+                </h2>
+                <div className="flex items-center space-x-1 text-xs text-gray-500">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span>{selectedBot.lastSeen}</span>
                 </div>
               </div>
             </div>
           </div>
-          <button
-            onClick={clearChat}
-            className="p-2 hover:bg-white/20 rounded-lg transition-colors"
-            title="Clear Chat"
-          >
-            <RefreshCw size={18} />
-          </button>
+          
+          <div className="flex items-center space-x-2 flex-shrink-0">
+            <button
+              onClick={clearChat}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              title="Clear Chat"
+            >
+              <RefreshCw size={18} className="text-gray-600" />
+            </button>
+            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+              <MoreVertical size={18} className="text-gray-600" />
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Messages Area */}
-      <div className="h-96 overflow-y-auto p-4 space-y-4">
+      {/* Enhanced Messages Area with Markdown Support */}
+      <div 
+        className="flex-1 overflow-y-auto px-4 py-4 space-y-4"
+        style={{ minHeight: 0 }}
+      >
         {messages.map((message) => (
           <div
             key={message.id}
-            className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'} animate-fadeIn`}
+            className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
           >
-            <div
-              className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                message.type === 'user'
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-100 text-gray-900'
-              }`}
-            >
+            <div className={`max-w-[85%] sm:max-w-[75%] lg:max-w-[65%] ${message.type === 'user' ? '' : ''}`}>
               {message.type === 'bot' && (
-                <div className="text-xs text-gray-500 mb-1 flex items-center">
-                  <span>{message.botName}</span>
-                  {message.fromCache && (
-                    <span className="ml-2 text-blue-500">⚡ Cached</span>
+                <div className="flex items-center space-x-2 mb-2">
+                  <div 
+                    className="w-6 h-6 rounded-full flex items-center justify-center text-xs flex-shrink-0"
+                    style={{ backgroundColor: `${selectedBot.color}20` }}
+                  >
+                    {selectedBot.icon}
+                  </div>
+                  <span className="text-xs font-medium text-gray-700">{message.botName}</span>
+                  <span className="text-xs text-gray-400">{formatTime(message.timestamp)}</span>
+                </div>
+              )}
+              
+              <div
+                className={`relative px-4 py-3 rounded-2xl shadow-sm ${
+                  message.type === 'user'
+                    ? 'bg-blue-500 text-white rounded-br-md ml-auto'
+                    : 'bg-white text-gray-800 border border-gray-200 rounded-bl-md'
+                }`}
+              >
+                {/* Enhanced Markdown Rendering */}
+                <div className="text-sm leading-relaxed">
+                  {message.type === 'user' ? (
+                    // For user messages, keep simple formatting
+                    <div className="whitespace-pre-wrap break-words">
+                      {message.content}
+                    </div>
+                  ) : (
+                    // For bot messages, use full Markdown rendering
+                    <div className="prose prose-sm max-w-none prose-gray">
+                      <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
+                        rehypePlugins={[rehypeHighlight]}
+                        components={MarkdownComponents}
+                        className="markdown-content"
+                      >
+                        {message.content}
+                      </ReactMarkdown>
+                    </div>
                   )}
                 </div>
-              )}
-              <div className="whitespace-pre-wrap">{message.content}</div>
-              {message.duration && (
-                <div className="text-xs text-gray-400 mt-1">
-                  Responded in {message.duration.toFixed(2)}s
-                </div>
-              )}
-              {message.retryAttempt && (
-                <div className="text-xs text-yellow-400 mt-1">
-                  Retry attempt
-                </div>
-              )}
+                
+                {message.type === 'user' && (
+                  <div className="text-xs text-blue-100 mt-2 text-right">
+                    {formatTime(message.timestamp)}
+                  </div>
+                )}
+                
+                {message.type === 'bot' && (
+                  <div className="flex items-center justify-between mt-3 pt-2 border-t border-gray-100">
+                    <div className="flex items-center space-x-2">
+                      <button
+                        onClick={() => copyMessage(message.content)}
+                        className="text-gray-400 hover:text-blue-600 transition-colors p-1.5 rounded-md hover:bg-blue-50"
+                        title="Copy message"
+                      >
+                        <Copy size={14} />
+                      </button>
+                      <button className="text-gray-400 hover:text-green-600 transition-colors p-1.5 rounded-md hover:bg-green-50">
+                        <ThumbsUp size={14} />
+                      </button>
+                      <button className="text-gray-400 hover:text-red-600 transition-colors p-1.5 rounded-md hover:bg-red-50">
+                        <ThumbsDown size={14} />
+                      </button>
+                    </div>
+                    
+                    {message.duration && (
+                      <span className="text-xs text-gray-400 font-mono">
+                        {message.duration.toFixed(1)}s
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         ))}
 
+        {/* Enhanced Typing Indicator */}
         {isTyping && (
-          <div className="flex justify-start animate-fadeIn">
-            <div className="bg-gray-100 rounded-lg px-4 py-2 flex items-center space-x-2">
-              <div className="flex space-x-1">
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
-              </div>
-              <span className="text-gray-600">Thinking...</span>
-            </div>
-          </div>
-        )}
-
-        {isLoading && !isTyping && (
           <div className="flex justify-start">
-            <div className="bg-gray-100 rounded-lg px-4 py-2 flex items-center space-x-2">
-              <Loader className="w-4 h-4 animate-spin" />
-              <span className="text-gray-600">Processing...</span>
+            <div className="flex flex-col">
+              <div className="flex items-center space-x-2 mb-2">
+                <div 
+                  className="w-6 h-6 rounded-full flex items-center justify-center text-xs"
+                  style={{ backgroundColor: `${selectedBot.color}20` }}
+                >
+                  {selectedBot.icon}
+                </div>
+                <span className="text-xs font-medium text-gray-700">
+                  {selectedBot.name} is typing...
+                </span>
+              </div>
+              <div className="bg-white border border-gray-200 rounded-2xl rounded-bl-md px-4 py-3 shadow-sm">
+                <div className="flex space-x-1">
+                  <div className="w-2.5 h-2.5 bg-gray-400 rounded-full animate-bounce"></div>
+                  <div className="w-2.5 h-2.5 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                  <div className="w-2.5 h-2.5 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -270,65 +574,76 @@ const ChatInterface = () => {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Error Display with Retry Option */}
+      {/* Error Display */}
       {error && (
-        <div className="bg-red-50 border-l-4 border-red-400 p-4 mx-4">
-          <div className="flex items-start">
-            <AlertCircle className="w-5 h-5 text-red-400 mt-0.5" />
-            <div className="ml-3 flex-1">
-              <p className="text-sm text-red-700">{error}</p>
-              {retryCount > 0 && retryCount < 3 && (
-                <button
-                  onClick={handleRetry}
-                  className="mt-2 text-sm bg-red-100 text-red-700 px-3 py-1 rounded hover:bg-red-200 transition-colors"
-                >
-                  Retry ({retryCount}/3)
-                </button>
-              )}
-            </div>
+        <div className="px-4 pb-2 flex-shrink-0">
+          <div className="bg-red-50 border border-red-200 rounded-xl p-3 flex items-center space-x-3">
+            <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0" />
+            <p className="text-sm text-red-800 flex-1">{error}</p>
+            <button
+              onClick={() => setError(null)}
+              className="text-red-500 hover:text-red-700 flex-shrink-0"
+            >
+              <X size={16} />
+            </button>
           </div>
         </div>
       )}
 
-      {/* Offline Notice */}
-      {(!isOnline || serverStatus !== 'online') && (
-        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mx-4">
-          <div className="flex items-center">
-            <WifiOff className="w-5 h-5 text-yellow-400" />
-            <div className="ml-3">
-              <p className="text-sm text-yellow-700">
-                {!isOnline ? 'You appear to be offline.' : 'Unable to connect to the server.'} 
-                Messages will be sent when connection is restored.
-              </p>
+      {/* GUARANTEED MOBILE SEND BUTTON - ALWAYS VISIBLE */}
+      <div className="bg-white border-t border-gray-200 px-4 py-3 flex-shrink-0">
+        {/* Input Row */}
+        <div className="flex items-end gap-2 w-full">
+          {/* Text Input - Flexible */}
+          <div className="flex-1 min-w-0">
+            <textarea
+              ref={inputRef}
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder={`Message ${selectedBot.name}...`}
+              className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-3 py-2 pr-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-base"
+              rows="1"
+              maxLength={UI_CONFIG.MAX_MESSAGE_LENGTH}
+              disabled={isLoading || !isOnline || serverStatus !== 'online'}
+              style={{ 
+                minHeight: '40px', 
+                maxHeight: '100px'
+              }}
+            />
+            {/* Character Counter */}
+            <div className="flex justify-between items-center mt-1 px-1">
+              <span className="text-xs text-gray-400">
+                {inputMessage.length}/{UI_CONFIG.MAX_MESSAGE_LENGTH}
+              </span>
+              <div className="flex items-center space-x-1 text-xs text-gray-400">
+                <div className={`w-2 h-2 rounded-full ${isOnline && serverStatus === 'online' ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                <span>{isOnline && serverStatus === 'online' ? 'Online' : 'Offline'}</span>
+              </div>
             </div>
           </div>
-        </div>
-      )}
-
-      {/* Input Area */}
-      <div className="border-t p-4">
-        <div className="flex space-x-2">
-          <textarea
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder={`Ask ${selectedBot.name} anything...`}
-            className="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-            rows="2"
-            maxLength={UI_CONFIG.MAX_MESSAGE_LENGTH}
-            disabled={isLoading || !isOnline || serverStatus !== 'online'}
-          />
+          
+          {/* SEND BUTTON - ALWAYS VISIBLE AND FUNCTIONAL */}
           <button
-            onClick={() => handleSendMessage()}
+            onClick={handleSendMessage}
             disabled={!inputMessage.trim() || isLoading || !isOnline || serverStatus !== 'online'}
-            className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+            className="flex-shrink-0 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-2xl shadow-lg hover:shadow-xl disabled:shadow-sm transition-all duration-200 active:scale-95"
+            style={{
+              width: '48px',
+              height: '48px',
+              minWidth: '48px',
+              minHeight: '48px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
           >
-            <Send size={20} />
+            {isLoading ? (
+              <Loader className="w-5 h-5 animate-spin" />
+            ) : (
+              <Send size={20} />
+            )}
           </button>
-        </div>
-        <div className="flex justify-between text-xs text-gray-500 mt-1">
-          <span>{inputMessage.length}/{UI_CONFIG.MAX_MESSAGE_LENGTH} characters</span>
-          <span>{isOnline && serverStatus === 'online' ? '🟢 Online' : '🔴 Offline'}</span>
         </div>
       </div>
     </div>

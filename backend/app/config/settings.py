@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings
+from pydantic import field_validator
 from typing import List, Optional
 import os
 import logging
@@ -49,24 +50,26 @@ class Settings(BaseSettings):
     def is_production(self) -> bool:
         return os.getenv('NODE_ENV') == 'production' or self.is_netlify
     
-    # CORS Origins (computed based on environment)
-    @property
-    def allowed_origins(self) -> List[str]:
-        """Get allowed origins based on environment"""
-        if self.is_production:
-            # Production origins
-            return [
-                "https://your-app-name.netlify.app",
-                "https://*.netlify.app"  # Allow all Netlify preview deployments
-            ]
-        else:
-            # Development origins
-            return [
-                "http://localhost:3000",
-                "http://127.0.0.1:3000",
-                "http://localhost:5173",  # Vite dev server alternative port
-                "http://127.0.0.1:5173"
-            ]
+    # CORS Origins as a field with default values
+    allowed_origins: List[str] = [
+        "https://your-app-name.netlify.app",
+        "https://*.netlify.app",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:5173",
+        "http://127.0.0.1:5173"
+    ]
+
+    @field_validator('allowed_origins', mode='before')
+    @classmethod
+    def validate_origins(cls, v) -> List[str]:
+        if isinstance(v, str):
+            import json
+            try:
+                return json.loads(v)
+            except json.JSONDecodeError:
+                return v.split(',')
+        return v
     
     class Config:
         env_file = ".env"

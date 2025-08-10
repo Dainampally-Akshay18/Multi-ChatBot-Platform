@@ -1,66 +1,217 @@
-
-/* Your custom styles below */
-/* @tailwind base;
+@tailwind base;
 @tailwind components;
-@tailwind utilities; */
-@import "tailwindcss";
+@tailwind utilities;
 
-/* Your custom styles below */
+/* Your custom CSS here */
 
-/* Custom styles */
-.line-clamp-3 {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+
+/* Your existing custom CSS here */
+.markdown-content {
+  color: #374151;
 }
 
-/* Scrollbar styling */
+/* Rest of your enhanced styles */
+
+
+
+/* FORCE FULL WIDTH - Critical CSS */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100% !important;
+  min-height: 100vh !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow-x: hidden;
+}
+
+#root {
+  width: 100% !important;
+  min-height: 100vh !important;
+}
+
+/* Override ALL container restrictions */
+.container,
+.max-w-7xl,
+.max-w-6xl,
+.max-w-5xl,
+.max-w-4xl,
+.max-w-3xl,
+.max-w-2xl,
+.max-w-xl {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+/* Force full width on specific elements */
+main,
+section,
+header,
+footer,
+.w-full {
+  width: 100% !important;
+}
+
+/* Remove unwanted margins */
+.mx-auto {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Custom utilities */
+@layer utilities {
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .w-screen-full {
+    width: 100vw !important;
+  }
+
+  .min-h-screen-full {
+    min-height: 100vh !important;
+  }
+}
+
+/* Enhanced animations */
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Custom scrollbar */
 .overflow-y-auto::-webkit-scrollbar {
   width: 6px;
 }
 
 .overflow-y-auto::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #f1f5f9;
   border-radius: 3px;
 }
 
 .overflow-y-auto::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
+  background: #cbd5e1;
   border-radius: 3px;
 }
 
 .overflow-y-auto::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
+  background: #94a3b8;
 }
 
-/* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  .overflow-y-auto::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Force full width on mobile */
+  * {
+    max-width: 100% !important;
+  }
 }
 
-.animate-fadeIn {
-  animation: fadeIn 0.3s ease-out;
+/* Print styles */
+@media print {
+  .no-print {
+    display: none;
+  }
 }
 
-/* Responsive typography */
-.prose {
-  line-height: 1.7;
+
+/* Enhanced Markdown Styles for Chat */
+.markdown-content {
+  @apply text-gray-800;
 }
 
-.prose h2 {
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-  font-size: 1.5rem;
-  font-weight: 600;
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4,
+.markdown-content h5,
+.markdown-content h6 {
+  @apply text-gray-900 font-semibold;
 }
 
-.prose ul {
-  margin: 1rem 0;
-  padding-left: 1.5rem;
+.markdown-content code {
+  @apply font-mono text-xs;
 }
 
-.prose li {
-  margin: 0.5rem 0;
+.markdown-content pre {
+  @apply font-mono text-xs bg-gray-900 text-gray-100;
 }
+
+.markdown-content blockquote {
+  @apply border-l-4 border-blue-400 bg-blue-50 text-gray-700;
+}
+
+.markdown-content table {
+  @apply text-xs;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+  @apply text-sm;
+}
+
+.markdown-content li {
+  @apply leading-relaxed;
+}
+
+.markdown-content a {
+  @apply text-blue-600 hover:text-blue-800;
+}
+
+.markdown-content strong {
+  @apply font-bold text-gray-900;
+}
+
+.markdown-content em {
+  @apply italic;
+}
+
+/* Code highlighting theme adjustments */
+.hljs {
+  @apply bg-gray-900 text-gray-100 p-3 rounded-lg;
+}
+
+.hljs-keyword {
+  @apply text-purple-300;
+}
+
+.hljs-string {
+  @apply text-green-300;
+}
+
+.hljs-number {
+  @apply text-yellow-300;
+}
+
+.hljs-comment {
+  @apply text-gray-400;
+}
+/* Your existing custom CSS here */
+/* Enhanced Markdown Styles for Chat */
+.markdown-content {
+  color: #374151;
+}
+
+.markdown-content {
+  color: #374151;
+}
+
+/* Rest of your existing CSS */

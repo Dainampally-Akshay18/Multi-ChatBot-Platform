@@ -1,6 +1,6 @@
 // API Configuration
 export const API_CONFIG = {
-  BASE_URL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000',
+  BASE_URL: '',
   ENDPOINTS: {
     MEDICAL: '/api/chatbots/medical',
     MENTAL_HEALTH: '/api/chatbots/mental-health',
@@ -13,7 +13,8 @@ export const API_CONFIG = {
     BATCH: '/api/chatbots/batch',
     HEALTH: '/api/chatbots/health',
     METRICS: '/api/chatbots/metrics',
-    TYPES: '/api/chatbots/types'
+    TYPES: '/api/chatbots/types',
+    TEST: '/api/test' 
   }
 };
 

@@ -7685,3 +7685,20 @@
 2025-08-10 13:39:10,838 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
 2025-08-10 13:39:20,499 - app.api.routes.chatbots - INFO - Processing mental_health request: im feeling sad...
 2025-08-10 13:39:21,051 - httpx - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-10 13:59:22,332 - app.main - INFO - Shutting down Multi-Chatbot Platform
+2025-08-10 13:59:24,632 - app.core.llm - INFO - GROQ LLM initialized with model: llama3-8b-8192
+2025-08-10 13:59:24,676 - app.chatbots.handlers - INFO - Initializing 8 chatbots...
+2025-08-10 13:59:24,677 - app.core.chains - INFO - Creating new enhanced chain for medical
+2025-08-10 13:59:24,690 - app.core.chains - INFO - Creating new enhanced chain for mental_health
+2025-08-10 13:59:24,700 - app.core.chains - INFO - Creating new enhanced chain for education
+2025-08-10 13:59:24,710 - app.core.chains - INFO - Creating new enhanced chain for finance
+2025-08-10 13:59:24,718 - app.core.chains - INFO - Creating new enhanced chain for legal
+2025-08-10 13:59:24,727 - app.core.chains - INFO - Creating new enhanced chain for career
+2025-08-10 13:59:24,737 - app.core.chains - INFO - Creating new enhanced chain for developer
+2025-08-10 13:59:24,744 - app.core.chains - INFO - Creating new enhanced chain for entertainment
+2025-08-10 13:59:24,752 - app.chatbots.handlers - INFO - Successfully initialized 8/8 chatbots
+2025-08-10 13:59:24,761 - app.main - INFO - Environment validation successful
+2025-08-10 13:59:24,768 - app.main - INFO - Starting Multi-Chatbot Platform v1.0.0
+2025-08-10 13:59:24,768 - app.main - INFO - Debug mode: True
+2025-08-10 13:59:24,768 - app.main - INFO - GROQ model: llama3-8b-8192
+2025-08-10 13:59:24,769 - app.main - INFO - Application startup complete

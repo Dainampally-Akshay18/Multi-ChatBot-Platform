@@ -1,40 +1,33 @@
 [build]
-  command = "cd frontend && npm ci --include=dev && npm run build"
+  command = "chmod +x ./build.sh && ./build.sh"
   publish = "frontend/dist"
 
 [functions]
   directory = "backend/netlify/functions"
 
-# Your existing environment variables and other settings
 [build.environment]
-  NODE_VERSION = "18"
+  NODE_VERSION = "20"
+  PYTHON_VERSION = "3.9"
+  # Add your API keys here
+  GROQ_API_KEY = "your_groq_api_key"
 
-# Your existing headers and redirects
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Content-Type-Options = "nosniff"
-    X-Frame-Options = "DENY"
-    X-XSS-Protection = "1; mode=block"
-
-[[headers]]
-  for = "/assets/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-
-[[headers]]
-  for = "/.netlify/functions/*"
-  [headers.values]
-    Access-Control-Allow-Headers = "Content-Type, Authorization"
-    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
-    Access-Control-Allow-Origin = "*"
-
+# CRITICAL: API redirects - this connects frontend to backend
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/api/:splat"
   status = 200
+  force = true
 
+# Frontend redirects for React Router
 [[redirects]]
-  from = "/*"
+  from = "/*"  
   to = "/index.html"
   status = 200
+
+# CORS headers for API requests
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type, Authorization, X-Requested-With"

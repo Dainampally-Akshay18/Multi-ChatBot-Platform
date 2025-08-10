@@ -1,29 +1,61 @@
-import axios from 'axios';
-import { API_CONFIG } from '../utils/constants';
+// API service for connecting to Netlify Functions backend
 
-const api = axios.create({
-  baseURL: API_CONFIG.BASE_URL,
-  timeout: 30000,
-  headers: {
-    'Content-Type': 'application/json',
+const API_BASE_URL = process.env.NODE_ENV === 'production' 
+  ? '' // Use relative URLs in production (Netlify handles routing)
+  : 'http://localhost:8000'; // Local development backend
+
+class ApiService {
+  async request(endpoint, options = {}) {
+    const url = `${API_BASE_URL}${endpoint}`;
+    
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+      ...options,
+    };
+
+    try {
+      const response = await fetch(url, config);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error('API request failed:', error);
+      throw error;
+    }
   }
-});
 
-// Debug interceptors
-api.interceptors.request.use(request => {
-  console.log('Starting Request:', request);
-  return request;
-});
-
-api.interceptors.response.use(
-  response => {
-    console.log('Response:', response);
-    return response;
-  },
-  error => {
-    console.error('API Error:', error);
-    return Promise.reject(error);
+  // Chatbot API methods
+  async sendMedicalMessage(message) {
+    return this.request('/api/medical', {
+      method: 'POST',
+      body: JSON.stringify({ message }),
+    });
   }
-);
 
-export default api;
+  async sendEducationMessage(message) {
+    return this.request('/api/education', {
+      method: 'POST',
+      body: JSON.stringify({ message }),
+    });
+  }
+
+  async sendGeneralMessage(message) {
+    return this.request('/api/general', {
+      method: 'POST',
+      body: JSON.stringify({ message }),
+    });
+  }
+
+  // Health check
+  async healthCheck() {
+    return this.request('/api');
+  }
+}
+
+export default new ApiService();

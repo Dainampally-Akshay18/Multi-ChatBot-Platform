@@ -9,24 +9,25 @@
   NODE_VERSION = "20"
   PYTHON_VERSION = "3.9"
 
-# CRITICAL: API redirects with proper force
+# CRITICAL: Updated redirects for /api/chatbots/* endpoints
 [[redirects]]
-  from = "/api/*"
+  from = "/api/chatbots/*"
   to = "/.netlify/functions/api/:splat"
   status = 200
   force = true
 
 [[redirects]]
-  from = "/api"
+  from = "/api/chatbots"
   to = "/.netlify/functions/api"
   status = 200
   force = true
 
-# Health check redirect
+# Fallback redirects
 [[redirects]]
-  from = "/health"
-  to = "/.netlify/functions/api"
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
   status = 200
+  force = true
 
 # Frontend SPA redirects
 [[redirects]]
@@ -34,11 +35,10 @@
   to = "/index.html"
   status = 200
 
-# Enhanced headers for functions
+# CORS headers
 [[headers]]
   for = "/.netlify/functions/*"
   [headers.values]
     Access-Control-Allow-Origin = "*"
     Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
-    Access-Control-Allow-Headers = "Content-Type, Authorization, X-Requested-With"
-    Access-Control-Max-Age = "86400"
+    Access-Control-Allow-Headers = "Content-Type, Authorization"

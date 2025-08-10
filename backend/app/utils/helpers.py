@@ -1,5 +1,5 @@
 import os
-from app.config import settings
+from config import settings
 
 def validate_environment():
     """Validate that all required environment variables are set"""

@@ -1,12 +1,13 @@
-// API service for connecting to Netlify Functions backend
-
+// frontend/src/services/api.js
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? '/' // Use relative URLs in production (Netlify handles routing)
+  ? 'https://cdak-chatbot.netlify.app' // Use root-relative URLs in production (Netlify handles routing)
   : 'http://localhost:8000'; // Local development backend
 
 class ApiService {
   async request(endpoint, options = {}) {
-    const url = `${API_BASE_URL}${endpoint}`;
+    // Remove leading slash from endpoint to avoid double slashes
+    const cleanEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint;
+    const url = `${API_BASE_URL}${cleanEndpoint}`;
     
     const config = {
       headers: {
@@ -17,6 +18,7 @@ class ApiService {
     };
 
     try {
+      console.log('Making request to:', url); // Debug log
       const response = await fetch(url, config);
       
       if (!response.ok) {
@@ -30,31 +32,29 @@ class ApiService {
     }
   }
 
-  // Chatbot API methods
   async sendMedicalMessage(message) {
-    return this.request('/api/medical', {
+    return this.request('api/medical', {
       method: 'POST',
       body: JSON.stringify({ message }),
     });
   }
 
   async sendEducationMessage(message) {
-    return this.request('/api/education', {
-      method: 'POST',
+    return this.request('api/education', {
+      method: 'POST', 
       body: JSON.stringify({ message }),
     });
   }
 
   async sendGeneralMessage(message) {
-    return this.request('/api/general', {
+    return this.request('api/general', {
       method: 'POST',
       body: JSON.stringify({ message }),
     });
   }
 
-  // Health check
   async healthCheck() {
-    return this.request('/api');
+    return this.request('api');
   }
 }
 

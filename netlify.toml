@@ -8,26 +8,37 @@
 [build.environment]
   NODE_VERSION = "20"
   PYTHON_VERSION = "3.9"
-  # Add your API keys here
-  GROQ_API_KEY = "your_groq_api_key"
 
-# CRITICAL: API redirects - this connects frontend to backend
+# CRITICAL: API redirects with proper force
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/api/:splat"
   status = 200
   force = true
 
-# Frontend redirects for React Router
 [[redirects]]
-  from = "/*"  
+  from = "/api"
+  to = "/.netlify/functions/api"
+  status = 200
+  force = true
+
+# Health check redirect
+[[redirects]]
+  from = "/health"
+  to = "/.netlify/functions/api"
+  status = 200
+
+# Frontend SPA redirects
+[[redirects]]
+  from = "/*"
   to = "/index.html"
   status = 200
 
-# CORS headers for API requests
+# Enhanced headers for functions
 [[headers]]
   for = "/.netlify/functions/*"
   [headers.values]
     Access-Control-Allow-Origin = "*"
     Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
     Access-Control-Allow-Headers = "Content-Type, Authorization, X-Requested-With"
+    Access-Control-Max-Age = "86400"

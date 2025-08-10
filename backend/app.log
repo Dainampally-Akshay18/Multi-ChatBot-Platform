@@ -7702,3 +7702,20 @@
 2025-08-10 13:59:24,768 - app.main - INFO - Debug mode: True
 2025-08-10 13:59:24,768 - app.main - INFO - GROQ model: llama3-8b-8192
 2025-08-10 13:59:24,769 - app.main - INFO - Application startup complete
+2025-08-10 14:25:13,427 - app.main - INFO - Shutting down Multi-Chatbot Platform
+2025-08-10 14:25:16,444 - app.core.llm - INFO - GROQ LLM initialized with model: llama3-8b-8192
+2025-08-10 14:25:16,494 - app.chatbots.handlers - INFO - Initializing 8 chatbots...
+2025-08-10 14:25:16,495 - app.core.chains - INFO - Creating new enhanced chain for medical
+2025-08-10 14:25:16,510 - app.core.chains - INFO - Creating new enhanced chain for mental_health
+2025-08-10 14:25:16,518 - app.core.chains - INFO - Creating new enhanced chain for education
+2025-08-10 14:25:16,527 - app.core.chains - INFO - Creating new enhanced chain for finance
+2025-08-10 14:25:16,534 - app.core.chains - INFO - Creating new enhanced chain for legal
+2025-08-10 14:25:16,542 - app.core.chains - INFO - Creating new enhanced chain for career
+2025-08-10 14:25:16,553 - app.core.chains - INFO - Creating new enhanced chain for developer
+2025-08-10 14:25:16,562 - app.core.chains - INFO - Creating new enhanced chain for entertainment
+2025-08-10 14:25:16,569 - app.chatbots.handlers - INFO - Successfully initialized 8/8 chatbots
+2025-08-10 14:25:16,578 - app.main - INFO - Environment validation successful
+2025-08-10 14:25:16,585 - app.main - INFO - Starting Multi-Chatbot Platform v1.0.0
+2025-08-10 14:25:16,585 - app.main - INFO - Debug mode: True
+2025-08-10 14:25:16,585 - app.main - INFO - GROQ model: llama3-8b-8192
+2025-08-10 14:25:16,586 - app.main - INFO - Application startup complete

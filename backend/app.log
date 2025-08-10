@@ -7719,3 +7719,71 @@
 2025-08-10 14:25:16,585 - app.main - INFO - Debug mode: True
 2025-08-10 14:25:16,585 - app.main - INFO - GROQ model: llama3-8b-8192
 2025-08-10 14:25:16,586 - app.main - INFO - Application startup complete
+2025-08-10 14:31:08,573 - app.main - INFO - Shutting down Multi-Chatbot Platform
+2025-08-10 14:31:14,465 - app.core.llm - INFO - GROQ LLM initialized with model: llama3-8b-8192
+2025-08-10 14:31:14,573 - app.chatbots.handlers - INFO - Initializing 8 chatbots...
+2025-08-10 14:31:14,574 - app.core.chains - INFO - Creating new enhanced chain for medical
+2025-08-10 14:31:14,604 - app.core.chains - INFO - Creating new enhanced chain for mental_health
+2025-08-10 14:31:14,625 - app.core.chains - INFO - Creating new enhanced chain for education
+2025-08-10 14:31:14,650 - app.core.chains - INFO - Creating new enhanced chain for finance
+2025-08-10 14:31:14,683 - app.core.chains - INFO - Creating new enhanced chain for legal
+2025-08-10 14:31:14,707 - app.core.chains - INFO - Creating new enhanced chain for career
+2025-08-10 14:31:14,731 - app.core.chains - INFO - Creating new enhanced chain for developer
+2025-08-10 14:31:14,756 - app.core.chains - INFO - Creating new enhanced chain for entertainment
+2025-08-10 14:31:14,776 - app.chatbots.handlers - INFO - Successfully initialized 8/8 chatbots
+2025-08-10 14:31:14,798 - app.main - INFO - Environment validation successful
+2025-08-10 14:31:14,817 - app.main - INFO - Starting Multi-Chatbot Platform v1.0.0
+2025-08-10 14:31:14,818 - app.main - INFO - Debug mode: True
+2025-08-10 14:31:14,818 - app.main - INFO - GROQ model: llama3-8b-8192
+2025-08-10 14:31:14,819 - app.main - INFO - Application startup complete
+2025-08-10 14:31:17,299 - app.main - INFO - Shutting down Multi-Chatbot Platform
+2025-08-10 14:31:21,495 - app.core.llm - INFO - GROQ LLM initialized with model: llama3-8b-8192
+2025-08-10 14:31:21,575 - app.chatbots.handlers - INFO - Initializing 8 chatbots...
+2025-08-10 14:31:21,576 - app.core.chains - INFO - Creating new enhanced chain for medical
+2025-08-10 14:31:21,598 - app.core.chains - INFO - Creating new enhanced chain for mental_health
+2025-08-10 14:31:21,613 - app.core.chains - INFO - Creating new enhanced chain for education
+2025-08-10 14:31:21,627 - app.core.chains - INFO - Creating new enhanced chain for finance
+2025-08-10 14:31:21,640 - app.core.chains - INFO - Creating new enhanced chain for legal
+2025-08-10 14:31:21,655 - app.core.chains - INFO - Creating new enhanced chain for career
+2025-08-10 14:31:21,671 - app.core.chains - INFO - Creating new enhanced chain for developer
+2025-08-10 14:31:21,688 - app.core.chains - INFO - Creating new enhanced chain for entertainment
+2025-08-10 14:31:21,705 - app.chatbots.handlers - INFO - Successfully initialized 8/8 chatbots
+2025-08-10 14:31:21,722 - app.main - INFO - Environment validation successful
+2025-08-10 14:31:21,736 - app.main - INFO - Starting Multi-Chatbot Platform v1.0.0
+2025-08-10 14:31:21,737 - app.main - INFO - Debug mode: True
+2025-08-10 14:31:21,738 - app.main - INFO - GROQ model: llama3-8b-8192
+2025-08-10 14:31:21,738 - app.main - INFO - Application startup complete
+2025-08-10 14:32:07,948 - app.main - INFO - Shutting down Multi-Chatbot Platform
+2025-08-10 14:32:11,149 - app.core.llm - INFO - GROQ LLM initialized with model: llama3-8b-8192
+2025-08-10 14:32:11,227 - app.chatbots.handlers - INFO - Initializing 8 chatbots...
+2025-08-10 14:32:11,228 - app.core.chains - INFO - Creating new enhanced chain for medical
+2025-08-10 14:32:11,251 - app.core.chains - INFO - Creating new enhanced chain for mental_health
+2025-08-10 14:32:11,266 - app.core.chains - INFO - Creating new enhanced chain for education
+2025-08-10 14:32:11,282 - app.core.chains - INFO - Creating new enhanced chain for finance
+2025-08-10 14:32:11,299 - app.core.chains - INFO - Creating new enhanced chain for legal
+2025-08-10 14:32:11,317 - app.core.chains - INFO - Creating new enhanced chain for career
+2025-08-10 14:32:11,335 - app.core.chains - INFO - Creating new enhanced chain for developer
+2025-08-10 14:32:11,355 - app.core.chains - INFO - Creating new enhanced chain for entertainment
+2025-08-10 14:32:11,374 - app.chatbots.handlers - INFO - Successfully initialized 8/8 chatbots
+2025-08-10 14:32:11,402 - app.main - INFO - Environment validation successful
+2025-08-10 14:32:11,425 - app.main - INFO - Starting Multi-Chatbot Platform v1.0.0
+2025-08-10 14:32:11,425 - app.main - INFO - Debug mode: True
+2025-08-10 14:32:11,426 - app.main - INFO - GROQ model: llama3-8b-8192
+2025-08-10 14:32:11,426 - app.main - INFO - Application startup complete
+2025-08-10 14:32:23,447 - app.main - INFO - Shutting down Multi-Chatbot Platform
+2025-08-10 14:32:30,045 - app.core.llm - INFO - GROQ LLM initialized with model: llama3-8b-8192
+2025-08-10 14:32:30,122 - app.chatbots.handlers - INFO - Initializing 8 chatbots...
+2025-08-10 14:32:30,123 - app.core.chains - INFO - Creating new enhanced chain for medical
+2025-08-10 14:32:30,147 - app.core.chains - INFO - Creating new enhanced chain for mental_health
+2025-08-10 14:32:30,160 - app.core.chains - INFO - Creating new enhanced chain for education
+2025-08-10 14:32:30,174 - app.core.chains - INFO - Creating new enhanced chain for finance
+2025-08-10 14:32:30,186 - app.core.chains - INFO - Creating new enhanced chain for legal
+2025-08-10 14:32:30,199 - app.core.chains - INFO - Creating new enhanced chain for career
+2025-08-10 14:32:30,214 - app.core.chains - INFO - Creating new enhanced chain for developer
+2025-08-10 14:32:30,227 - app.core.chains - INFO - Creating new enhanced chain for entertainment
+2025-08-10 14:32:30,241 - app.chatbots.handlers - INFO - Successfully initialized 8/8 chatbots
+2025-08-10 14:32:30,256 - app.main - INFO - Environment validation successful
+2025-08-10 14:32:30,267 - app.main - INFO - Starting Multi-Chatbot Platform v1.0.0
+2025-08-10 14:32:30,268 - app.main - INFO - Debug mode: True
+2025-08-10 14:32:30,268 - app.main - INFO - GROQ model: llama3-8b-8192
+2025-08-10 14:32:30,269 - app.main - INFO - Application startup complete

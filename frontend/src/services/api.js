@@ -1,7 +1,7 @@
 // API service for connecting to Netlify Functions backend
 
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? '' // Use relative URLs in production (Netlify handles routing)
+  ? '/' // Use relative URLs in production (Netlify handles routing)
   : 'http://localhost:8000'; // Local development backend
 
 class ApiService {

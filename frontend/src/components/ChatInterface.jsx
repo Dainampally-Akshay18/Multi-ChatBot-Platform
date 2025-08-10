@@ -7,8 +7,7 @@ import {
   Send, ArrowLeft, Loader, AlertCircle, RefreshCw, 
   Copy, ThumbsUp, ThumbsDown, MoreVertical, X
 } from 'lucide-react';
-import api from '../services/api';
-import { API_CONFIG } from '../utils/constants';
+import apiService from '../services/api';
 
 // Add this CSS import for syntax highlighting
 import 'highlight.js/styles/github.css';
@@ -289,6 +288,7 @@ const ChatInterface = () => {
     }
   };
 
+  // Updated handleSendMessage with new API service
   const handleSendMessage = async () => {
     if (!inputMessage.trim() || isLoading) return;
 
@@ -305,6 +305,7 @@ const ChatInterface = () => {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    const currentMessage = inputMessage.trim();
     setInputMessage('');
     setIsLoading(true);
     setError(null);
@@ -314,29 +315,55 @@ const ChatInterface = () => {
     try {
       await simulateTyping(1200);
 
-      // Use the real API service
-      console.log('Sending to:', API_CONFIG.ENDPOINTS[selectedBot.id]);
-      const response = await api.post(API_CONFIG.ENDPOINTS[selectedBot.id.toUpperCase()], {
-        message: userMessage.content
-      });
+      let response;
+      
+      // Map botId to API service methods
+      switch (selectedBot.id) {
+        case 'medical':
+        case 'mental_health': // Mental health can use medical endpoint
+          response = await apiService.sendMedicalMessage(currentMessage);
+          break;
+        case 'education':
+          response = await apiService.sendEducationMessage(currentMessage);
+          break;
+        case 'finance':
+        case 'legal':
+        case 'career':
+        case 'developer':
+        case 'entertainment':
+        default:
+          response = await apiService.sendGeneralMessage(currentMessage);
+          break;
+      }
 
-      if (response.data) {
+      if (response && response.response) {
         const botMessage = {
           id: Date.now() + 1,
           type: 'bot',
-          content: response.data.response,
+          content: response.response,
           timestamp: new Date().toISOString(),
           botName: selectedBot.name,
-          duration: response.data.duration || 0
+          duration: response.duration || 0
         };
 
         setMessages(prev => [...prev, botMessage]);
       } else {
-        setError('Failed to get response. Please try again.');
+        throw new Error('Invalid response format');
       }
     } catch (err) {
       console.error('API Error:', err);
-      setError('Something went wrong. Please try again.');
+      
+      // Add error message to chat
+      const errorMessage = {
+        id: Date.now() + 1,
+        type: 'bot',
+        content: `Sorry, I encountered an error while processing your request. Please try again.\n\n*Error: ${err.message || 'Unknown error occurred'}*`,
+        timestamp: new Date().toISOString(),
+        botName: selectedBot.name
+      };
+      setMessages(prev => [...prev, errorMessage]);
+      
+      setError('Failed to get response. Please try again.');
     } finally {
       setIsLoading(false);
       setIsTyping(false);
@@ -356,7 +383,7 @@ const ChatInterface = () => {
     setError(null);
   };
 
-  // Enhanced copyMessage function with Markdown handling
+  // Fixed copyMessage function with proper syntax
   const copyMessage = async (content) => {
     try {
       // Remove markdown formatting for plain text copy

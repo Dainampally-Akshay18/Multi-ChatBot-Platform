@@ -1,22 +1,12 @@
-# Multi-Chatbot Platform - Fixed Netlify Configuration
+# Simplified configuration to get functions working
 [build]
-  # Fixed build command 
-  command = "cd frontend && npm install && npm run build"
-  
-  # Publish the built frontend
-  publish = "frontend/dist"
-  
-  # Functions directory at root level
-  functions = "netlify/functions"
-
-[build.environment]
-  PYTHON_VERSION = "3.9"
-  NODE_VERSION = "20"
+  command = "echo 'Testing functions deployment'"
+  publish = "frontend/"
 
 [functions]
   directory = "netlify/functions"
 
-# Your API redirects (these are working correctly)
+# Your API redirects
 [[redirects]]
   from = "/api/chatbots/*"
   to = "/.netlify/functions/api/:splat"
@@ -34,13 +24,10 @@
   to = "/index.html"
   status = 200
 
-# CORS headers (working correctly)
+# CORS headers
 [[headers]]
   for = "/.netlify/functions/*"
   [headers.values]
     Access-Control-Allow-Origin = "*"
     Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
-    Access-Control-Allow-Headers = "Content-Type, Authorization, X-Requested-With"
-
-[context.production.environment]
-  NODE_ENV = "production"
+    Access-Control-Allow-Headers = "Content-Type, Authorization"

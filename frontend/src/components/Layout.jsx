@@ -151,10 +151,7 @@ const Layout = ({ children }) => {
                 Built for professionals who demand excellence.
               </p>
               <div className="flex space-x-4">
-                <div className="flex items-center space-x-2 text-green-400">
-                  <Shield size={16} />
-                  <span className="text-sm">Enterprise Security</span>
-                </div>
+                
                 <div className="flex items-center space-x-2 text-blue-400">
                   <Globe size={16} />
                   <span className="text-sm">Global Scale</span>
@@ -197,10 +194,7 @@ const Layout = ({ children }) => {
                   <Zap size={16} className="text-yellow-400" />
                   <span>Real-time AI Processing</span>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Shield size={16} className="text-green-400" />
-                  <span>Advanced Security</span>
-                </div>
+                
                 <div className="flex items-center space-x-2">
                   <BarChart3 size={16} className="text-blue-400" />
                   <span>Performance Analytics</span>

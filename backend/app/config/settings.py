@@ -32,7 +32,7 @@ class Settings(BaseSettings):
     
     # GROQ Configuration
     groq_api_key: str
-    groq_model: str = "llama3-8b-8192"
+    groq_model: str = "llama3.1-70b-instruct"
     
     # LangChain Configuration
     max_tokens: int = 1000

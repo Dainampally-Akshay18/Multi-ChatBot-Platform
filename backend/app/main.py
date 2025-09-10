@@ -191,3 +191,7 @@ if __name__ == "__main__":
 @app.get("/api/test")
 async def test_endpoint():
     return {"message": "Backend is reachable"}
+
+@app.head("/")
+async def head_root():
+    return {"message": "OK"}

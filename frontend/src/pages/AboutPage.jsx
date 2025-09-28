@@ -177,7 +177,7 @@ const AboutPage = () => {
                         <div className="relative group/avatar">
                           <div className="absolute -inset-2 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full blur-md opacity-50 group-hover/avatar:opacity-75 transition-opacity duration-500"></div>
                           <img
-                            src="https://upload.wikimedia.org/wikipedia/commons/e/ef/Virat_Kohli_during_the_India_vs_Aus_4th_Test_match_at_Narendra_Modi_Stadium_on_09_March_2023.jpg"
+                            src="https://res.cloudinary.com/dadapse5k/image/upload/v1759041092/AK_f6aq6v.jpg"
                             alt="Developer - Chilukuri Dileep"
                             className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover ring-4 ring-slate-700/50 group-hover/avatar:ring-indigo-500/50 transition-all duration-500"
                           />

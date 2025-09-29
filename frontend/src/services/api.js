@@ -2,7 +2,7 @@
 // File: frontend/src/services/api.js
 
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://langchain-rag-chatbot.onrender.com' // Your Render backend URL
+  ? 'https://multi-chatbot-platform.onrender.com' // Your Render backend URL
   : 'http://localhost:8000'; // Local development backend
 
 class ApiService {

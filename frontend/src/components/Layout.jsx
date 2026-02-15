@@ -28,7 +28,6 @@ const Layout = ({ children }) => {
     { name: 'Home', href: '/', icon: Home, gradient: 'from-blue-600 to-indigo-600' },
     { name: 'Health', href: '/health', icon: Activity, gradient: 'from-green-600 to-emerald-600' },
     { name: 'Metrics', href: '/metrics', icon: BarChart3, gradient: 'from-purple-600 to-violet-600' },
-    { name: 'About', href: '/about', icon: Info, gradient: 'from-orange-600 to-red-600' },
   ];
 
   return (

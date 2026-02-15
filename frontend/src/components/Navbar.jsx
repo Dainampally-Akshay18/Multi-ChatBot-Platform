@@ -10,7 +10,6 @@ const Navbar = () => {
         { name: 'Home', href: '/', icon: Home },
         { name: 'Health', href: '/health', icon: Activity },
         { name: 'Metrics', href: '/metrics', icon: BarChart3 },
-        { name: 'About', href: '/about', icon: Info },
       ];
   return (
     <div>

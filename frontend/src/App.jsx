@@ -5,7 +5,6 @@ import BotSelector from './components/BotSelector';
 import ChatInterface from './components/ChatInterface';
 import HealthPage from './pages/HealthPage';
 import MetricsPage from './pages/MetricsPage';
-import AboutPage from './pages/AboutPage';
 import './styles/index.css';
 
 function App() {

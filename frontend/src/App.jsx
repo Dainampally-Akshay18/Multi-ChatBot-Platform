@@ -29,11 +29,7 @@ function App() {
               <MetricsPage />
             </Layout>
           } />
-          <Route path="/about" element={
-            <Layout>
-              <AboutPage />
-            </Layout>
-          } />
+          
         </Routes>
       </div>
     </Router>
